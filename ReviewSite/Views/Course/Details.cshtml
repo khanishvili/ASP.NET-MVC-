@@ -1,0 +1,208 @@
+﻿@model ReviewSite.Models.CourseAndUserReview
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+    <link href="~/Shared.css" rel="stylesheet" />
+    <link href="~/Details.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans|Ubuntu" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function SwapDivsWithClick(div1, div2) {
+            d1 = document.getElementById(div1);
+            d2 = document.getElementById(div2);
+
+            d1.style.display = "none";
+            d2.style.display = "flex";
+        }
+
+        function ToggleCreateReviewForm(div1) {
+            d1 = document.getElementById(div1);
+
+            if (d1.style.display == "flex") {
+                d1.style.display = "none";
+            } else {
+                d1.style.display = "flex";
+            }
+
+        }
+    </script>
+    <script>
+        $(function () {
+            $(".course-nav li").click(function (e) {
+                e.preventDefault();
+                $(".course-nav li").removeClass("selected");
+                $(this).addClass("selected");
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul class="navbar">
+                    <img class="logo" src="~/Images/MOOCA2.png" />
+                    <li><a href="/Category">Categories</a></li>
+                    <li><a href="/Course">Courses</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <div class="content">
+                <h1 class="course-title">@Model.Course.Title</h1>
+                <div class="course-rating">
+                    @for (int i = 0; i < Model.Course.SolidStars(); i++)
+                    {
+                        <i class="fas fa-star fa-2x"></i>
+                    }
+                    @for (int i = 0; i < Model.Course.HalfStars(); i++)
+                    {
+                        <i class="fas fa-star-half-alt fa-2x"></i>
+                    }
+                    @for (int i = 0; i < Model.Course.EmptyStars(); i++)
+                    {
+                        <i class="far fa-star fa-2x"></i>
+                    }
+                    <span class="num-reviews">(@Model.Course.UserReviews.Count())</span>
+                </div>
+                <ul class="course-nav">
+                    <li onclick="SwapDivsWithClick('course-user-reviews','course-overview');" class="overview-link selected">Overview</li>
+                    <li onclick="SwapDivsWithClick('course-overview','course-user-reviews');" class="reviews-link">Reviews</li>
+                </ul>
+                <div class="course-content">
+                    <div class="course-overview" id="course-overview">
+                        <p>
+                            @Model.Course.Overview
+                        </p>
+                    </div>
+                    <div class="course-user-reviews" id="course-user-reviews">
+                        <span class="create-review-link" onclick="ToggleCreateReviewForm('create-review-form');"><i class="fas fa-plus"></i><span>Add Review</span></span>
+                        <form asp-action="CreateUserReview" id="create-review-form">
+                            <div asp-validation-summary="ModelOnly" class="text-danger hidden"></div>
+                            <div class="form-group">
+                                <label asp-for="NewUserReview.UserName" class="control-label"></label>
+                                <input asp-for="NewUserReview.UserName" class="form-control" />
+                                <span asp-validation-for="NewUserReview.UserName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group" id="star-rating-select">
+                                <input class="star-rating_input" id="star-rating-5" type="radio" value="5" asp-for="NewUserReview.Rating" />
+                                <label class="star-rating_icon far fa-star" for="star-rating-5"></label>
+                                <input class="star-rating_input" id="star-rating-4" type="radio" value="4" asp-for="NewUserReview.Rating" />
+                                <label class="star-rating_icon far fa-star" for="star-rating-4"></label>
+                                <input class="star-rating_input" id="star-rating-3" type="radio" value="3" asp-for="NewUserReview.Rating" />
+                                <label class="star-rating_icon far fa-star" for="star-rating-3"></label>
+                                <input class="star-rating_input" id="star-rating-2" type="radio" value="2" asp-for="NewUserReview.Rating" />
+                                <label class="star-rating_icon far fa-star" for="star-rating-2"></label>
+                                <input class="star-rating_input" id="star-rating-1" type="radio" value="1" asp-for="NewUserReview.Rating" />
+                                <label class="star-rating_icon far fa-star" for="star-rating-1"></label>
+                                <span asp-validation-for="NewUserReview.Rating" class="text-danger"></span>
+                            </div>
+                            <div class="form-group" id="comment-group">
+                                <label asp-for="NewUserReview.Comment" class="control-label"></label>
+                                <textarea asp-for="NewUserReview.Comment" class="form-control" id="comment-box"></textarea>
+                                <span asp-validation-for="NewUserReview.Comment" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" asp-for="NewUserReview.CourseId" class="form-control" placeholder="@Model.Course.CourseId" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="create-btn" />
+                            </div>
+                        </form>
+                        <form asp-action="EditUserReview">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            @for (int j = 0; j < Model.Course.UserReviews.Count(); j++)
+                            {
+                                <div class="user-review-card" id="real-card-@j">
+                                    <div class="user-review-header">
+                                        <img class="user-review-img" src="~/Images/useravatar.png" />
+                                        <div class="name-rating">
+                                            <span class="user-review-name">@Model.Course.UserReviews[j].UserName</span>
+                                            <div class="user-review-rating">
+                                                @for (int i = 0; i < Model.Course.UserReviews[j].SolidStars(); i++)
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                @for (int i = 0; i < Model.Course.UserReviews[j].HalfStars(); i++)
+                                                {
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                }
+                                                @for (int i = 0; i < Model.Course.UserReviews[j].EmptyStars(); i++)
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            </div>
+                                            <div class="user-review-links">
+                                                <span class="delete-link" onclick="location.href='@Url.Action("DeleteUserReview", "Course", Model.Course.UserReviews[j])'">Delete</span> |
+                                                <span class="edit-link" onclick="SwapDivsWithClick('real-card-@j','edit-card-@j');">Edit</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="user-review-comment">@Model.Course.UserReviews[j].Comment</p>
+                                </div>
+                                <input type="hidden" asp-for="Course.UserReviews[j].UserReviewId" />
+                                <div class="user-review-card edit-card" id="edit-card-@j" style="display: none;">
+                                    <div class="user-review-header">
+                                        <img class="user-review-img" src="~/Images/useravatar.png" />
+                                        <div class="name-rating">
+                                            <span class="user-review-name">
+                                                <label asp-for="Course.UserReviews[j].UserName" class="control-label"></label>
+                                                <input asp-for="Course.UserReviews[j].UserName" class="form-control" />
+                                                <span asp-validation-for="Course.UserReviews[j].UserName" class="text-danger"></span>
+                                            </span>
+                                            <div class="user-review-rating">
+                                                <div class="form-group">
+                                                    <label asp-for="Course.UserReviews[j].Rating" class="control-label"></label>
+                                                    <input asp-for="Course.UserReviews[j].Rating" class="form-control" />
+                                                    <span asp-validation-for="Course.UserReviews[j].Rating" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="user-review-links">
+                                                <span class="delete-link" onclick="location.href='@Url.Action("DeleteUserReview", "Course", Model.Course.UserReviews[j])'">Delete</span> |
+                                                <span class="edit-link" onclick="SwapDivsWithClick('edit-card-@j','real-card-@j');">Edit</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="user-review-comment">
+                                        <div class="form-group">
+                                            <label asp-for="Course.UserReviews[j].Comment" class="control-label"></label>
+                                            <input asp-for="Course.UserReviews[j].Comment" class="form-control" />
+                                            <span asp-validation-for="Course.UserReviews[j].Comment" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="hidden" asp-for="Course.UserReviews[j].CourseId" class="form-control" placeholder="@Model.Course.CourseId" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" value="Submit Changes" class="btn btn-default" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <aside>
+                <img class="post-img" src="@Model.Course.ImageURL" />
+                <div class="post-details">
+                    <p><span>Category: </span>@Model.Course.Category.Name</p>
+                    <p><span>Start Date: </span>@Model.Course.StartDate</p>
+                    <p><span>Duration: </span>@Model.Course.Duration</p>
+                    <p><span>Price: </span>FREE</p>
+                </div>
+            </aside>
+        </main>
+        <footer></footer>
+    </div>
+</body>
+</html>
+

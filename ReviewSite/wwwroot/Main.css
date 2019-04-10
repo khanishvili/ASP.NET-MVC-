@@ -1,0 +1,124 @@
+﻿aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem;
+    width: 40rem;
+    align-self: flex-start;
+}
+
+    aside h1 {
+        color: #243B53;
+        font-size: 3rem;
+        margin-bottom: 2rem;
+    }
+
+.sort-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    height: 5rem;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 5px #ccc;
+    margin: 1rem 0;
+    padding: 2rem;
+    font-size: 1.5rem;
+}
+
+    .sort-box p {
+        color: #2680C2;
+        font-weight: bold;
+    }
+
+    .sort-box i {
+        color: #555;
+    }
+
+
+
+.reviews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 70rem);
+    justify-content: center;
+    grid-gap: 4rem;
+    padding: 3rem 0rem;
+    flex-grow: 1;
+}
+
+.review-card {
+    display: grid;
+    height: 31.5rem;
+    grid-template-columns: 45% auto;
+    box-shadow: 0.5px 0.5px 3px #222;
+    background: white;
+}
+
+
+.review-card-img {
+    object-fit: cover;
+    object-position: 80% 0%;
+    height: 100%;
+    width: 100%;
+}
+
+.review-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1.2rem;
+    color: #444;
+}
+
+.review-card-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+    color: #243B53;
+}
+
+.review-card-category {
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: normal;
+    color: #334E68;
+}
+
+.review-card-summary {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    color: #334E68;
+}
+
+.review-card-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    margin-top: auto;
+}
+
+.review-card-rating {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    color: #fed36c;
+}
+
+.num-reviews {
+    color: #334E68;
+    font-size: 1.3rem;
+    margin-left: 1rem;
+}
+
+.review-card-button {
+    background-color: #2680C2;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    font-family: 'Fira Sans'
+}
